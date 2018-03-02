@@ -89,6 +89,19 @@ func (h *ProductHandler) updateProduct(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (h *ProductHandler) deleteProduct(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid product ID")
+	}
+
+	err = h.product.deleteProduct(h.DB, id)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
+	respondWithJSON(w, http.StatusOK, map[string]bool{"success": true})
+}
 func respondWithError(w http.ResponseWriter, code int, message string) {
 	respondWithJSON(w, code, map[string]string{"error": message})
 }
