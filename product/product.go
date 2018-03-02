@@ -11,9 +11,9 @@ type Product struct {
 }
 
 type Repository interface {
-	getProduct(db *sql.DB, id int) (Product, error)
-	updateProduct(db *sql.DB, product Product) error
-	deleteProduct(db *sql.DB, id int) error
-	createProduct(db *sql.DB, product Product) (int, error)
-	getProducts(db *sql.DB, start, count int) ([]Product, error)
+	GetProduct(db *sql.DB, id int) (Product, error)
+	UpdateProduct(db *sql.DB, product Product) error
+	DeleteProduct(db *sql.DB, id int) error
+	CreateProduct(db *sql.DB, product Product) (int, error)
+	GetProducts(db *sql.DB, start, count int) ([]Product, error)
 }

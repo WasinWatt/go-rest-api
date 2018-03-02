@@ -18,26 +18,26 @@ type productView struct {
 	Price string `db:"price"`
 }
 
-func (productRepository) getProduct(db *sql.DB, id int) (product.Product, error) {
+func (productRepository) GetProduct(db *sql.DB, id int) (product.Product, error) {
 	var p product.Product
 	err := db.QueryRow("SELECT name, price FROM products WHERE id=$1", id).Scan(&p)
 
 	return p, err
 }
 
-func (productRepository) updateProduct(db *sql.DB, P product.Product) error {
+func (productRepository) UpdateProduct(db *sql.DB, P product.Product) error {
 	_, err := db.Exec("UPDATE products SET name=$1, price=$2 WHERE id=$3", P.Name, P.Price, P.ID)
 
 	return err
 }
 
-func (productRepository) deleteProduct(db *sql.DB, id int) error {
+func (productRepository) DeleteProduct(db *sql.DB, id int) error {
 	_, err := db.Exec("DELETE FROM products WHERE id=$1", id)
 
 	return err
 }
 
-func (productRepository) createProduct(db *sql.DB, P product.Product) (int, error) {
+func (productRepository) CreateProduct(db *sql.DB, P product.Product) (int, error) {
 	var id int
 	err := db.QueryRow("INSERT INTO products(name, price) VALUES($1, $2) RETURNING id", P.Name, P.Price).Scan(&id)
 
@@ -48,7 +48,7 @@ func (productRepository) createProduct(db *sql.DB, P product.Product) (int, erro
 	return id, nil
 }
 
-func (productRepository) getProducts(db *sql.DB, start, count int) ([]product.Product, error) {
+func (productRepository) GetProducts(db *sql.DB, start, count int) ([]product.Product, error) {
 	rows, err := db.Query("SELECT id, name, price FROM products LIMIT $1 OFFSET $2", count, start)
 
 	if err != nil {

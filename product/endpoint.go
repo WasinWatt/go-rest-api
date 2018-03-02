@@ -19,7 +19,7 @@ func (h *ProductHandler) getProducts(w http.ResponseWriter, r *http.Request) {
 		start = 0
 	}
 
-	products, err := h.product.getProducts(h.DB, start, count)
+	products, err := h.product.GetProducts(h.DB, start, count)
 
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -39,7 +39,7 @@ func (h *ProductHandler) createProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	id, err := h.product.createProduct(h.DB, p)
+	id, err := h.product.CreateProduct(h.DB, p)
 
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -55,7 +55,7 @@ func (h *ProductHandler) getProduct(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid product ID")
 	}
 
-	p, err := h.product.getProduct(h.DB, id)
+	p, err := h.product.GetProduct(h.DB, id)
 
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
@@ -81,7 +81,7 @@ func (h *ProductHandler) updateProduct(w http.ResponseWriter, r *http.Request) {
 
 	p.ID = id
 
-	err = h.product.updateProduct(h.DB, p)
+	err = h.product.UpdateProduct(h.DB, p)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 	}
@@ -96,12 +96,14 @@ func (h *ProductHandler) deleteProduct(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusBadRequest, "Invalid product ID")
 	}
 
-	err = h.product.deleteProduct(h.DB, id)
+	err = h.product.DeleteProduct(h.DB, id)
+
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 	}
 	respondWithJSON(w, http.StatusOK, map[string]bool{"success": true})
 }
+
 func respondWithError(w http.ResponseWriter, code int, message string) {
 	respondWithJSON(w, code, map[string]string{"error": message})
 }
