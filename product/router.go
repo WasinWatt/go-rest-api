@@ -19,11 +19,11 @@ type ProductHandler struct {
 func NewProductRouter(db *sql.DB, product Repository) *ProductRouter {
 	router := mux.NewRouter()
 	handler := &ProductHandler{db, product}
-	router.HandleFunc("/", handler.getProducts).Methods("GET")
-	router.HandleFunc("/", handler.createProduct).Methods("POST")
-	router.HandleFunc("/{id:[0-9]+}", handler.getProduct).Methods("GET")
-	router.HandleFunc("/{id:[0-9]+}", handler.updateProduct).Methods("PUT")
-	router.HandleFunc("/{id:[0-9]+}", handler.deleteProduct).Methods("DELETE")
+	router.HandleFunc("/product", handler.getProducts).Methods("GET")
+	router.HandleFunc("/product", handler.createProduct).Methods("POST")
+	router.HandleFunc("/product/{id:[0-9]+}", handler.getProduct).Methods("GET")
+	router.HandleFunc("/product/{id:[0-9]+}", handler.updateProduct).Methods("PUT")
+	router.HandleFunc("/product/{id:[0-9]+}", handler.deleteProduct).Methods("DELETE")
 
 	return &ProductRouter{router, db}
 }

@@ -1,6 +1,7 @@
 package product
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"strconv"
@@ -45,7 +46,7 @@ func (h *ProductHandler) createProduct(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJSON(w, http.StatusCreated, map[string]string{"id": strconv.Itoa(id)})
+	respondWithJSON(w, http.StatusCreated, map[string]int{"id": id})
 }
 
 func (h *ProductHandler) getProduct(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +59,13 @@ func (h *ProductHandler) getProduct(w http.ResponseWriter, r *http.Request) {
 	p, err := h.product.GetProduct(h.DB, id)
 
 	if err != nil {
-		respondWithError(w, http.StatusInternalServerError, err.Error())
+		switch err {
+		case sql.ErrNoRows:
+			respondWithError(w, http.StatusNotFound, "Product not found")
+		default:
+			respondWithError(w, http.StatusInternalServerError, err.Error())
+		}
+		return
 	}
 	respondWithJSON(w, http.StatusOK, p)
 

@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"log"
 
 	"github.com/wasinwatt/go-rest-api/product"
 )
@@ -12,15 +13,23 @@ func NewProductRepository() product.Repository {
 
 type productRepository struct{}
 
-type productView struct {
-	ID    int64  `db:"id"`
-	Name  string `db:"name"`
-	Price string `db:"price"`
-}
+// type productView struct {
+// 	ID    int     `db:"id"`
+// 	Name  string  `db:"name"`
+// 	Price float64 `db:"price"`
+// }
+
+// func (p productView) toProduct() product.Product {
+// 	return product.Product{
+// 		ID:    p.ID,
+// 		Name:  p.Name,
+// 		Price: p.Price,
+// 	}
+// }
 
 func (productRepository) GetProduct(db *sql.DB, id int) (product.Product, error) {
 	var p product.Product
-	err := db.QueryRow("SELECT name, price FROM products WHERE id=$1", id).Scan(&p)
+	err := db.QueryRow("SELECT * FROM products WHERE id=$1", id).Scan(&p.ID, &p.Name, &p.Price)
 
 	return p, err
 }
@@ -40,8 +49,8 @@ func (productRepository) DeleteProduct(db *sql.DB, id int) error {
 func (productRepository) CreateProduct(db *sql.DB, P product.Product) (int, error) {
 	var id int
 	err := db.QueryRow("INSERT INTO products(name, price) VALUES($1, $2) RETURNING id", P.Name, P.Price).Scan(&id)
-
 	if err != nil {
+		log.Fatal(err)
 		return -1, err
 	}
 

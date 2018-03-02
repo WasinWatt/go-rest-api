@@ -34,5 +34,5 @@ func (a *App) Run(addr string) {
 func (a *App) initializeRoutes() {
 	productRepo := postgres.NewProductRepository()
 	productRouter := product.NewProductRouter(a.DB, productRepo)
-	a.Router.Handle("/product", productRouter.Router)
+	a.Router.PathPrefix("/product").Handler(productRouter.Router)
 }
