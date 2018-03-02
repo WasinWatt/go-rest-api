@@ -12,8 +12,8 @@ import (
 	"net/http/httptest"
 	"strconv"
 
-	"github.com/wasinwatt/go-postgres-api/app"
-	"github.com/wasinwatt/go-postgres-api/config"
+	"github.com/wasinwatt/go-rest-api/app"
+	"github.com/wasinwatt/go-rest-api/config"
 )
 
 var a app.App

@@ -3,40 +3,43 @@ package postgres
 import (
 	"database/sql"
 
-	"github.com/wasinwatt/go-postgres-api/product"
-	// "errors"
+	"github.com/wasinwatt/go-rest-api/product"
 )
 
-func NewProductRepository() *productRepository {
+func NewProductRepository() product.Repository {
 	return &productRepository{}
 }
 
 type productRepository struct{}
 
-func (productRepository) getProduct(db *sql.DB) (product.Product, error) {
+type productView struct {
+	ID    int64  `db:"id"`
+	Name  string `db:"name"`
+	Price string `db:"price"`
+}
+
+func (productRepository) getProduct(db *sql.DB, id int) (product.Product, error) {
 	var p product.Product
-	err := db.QueryRow("SELECT name, price FROM products WHERE id=$1", p.ID).Scan(&p)
+	err := db.QueryRow("SELECT name, price FROM products WHERE id=$1", id).Scan(&p)
 
 	return p, err
 }
 
-func (productRepository) updateProduct(db *sql.DB) error {
-	var p product.Product
-	_, err := db.Exec("UPDATE products SET name=$1, price=$2 WHERE id=$3", p.Name, p.Price, p.ID)
+func (productRepository) updateProduct(db *sql.DB, P product.Product) error {
+	_, err := db.Exec("UPDATE products SET name=$1, price=$2 WHERE id=$3", P.Name, P.Price, P.ID)
 
 	return err
 }
 
-func (productRepository) deleteProduct(db *sql.DB) error {
-	var p product.Product
-	_, err := db.Exec("DELETE FROM products WHERE id=$1", p.ID)
+func (productRepository) deleteProduct(db *sql.DB, id int) error {
+	_, err := db.Exec("DELETE FROM products WHERE id=$1", id)
 
 	return err
 }
 
 func (productRepository) createProduct(db *sql.DB, P product.Product) (int, error) {
 	var id int
-	err := db.QueryRow("INSERT INTO products(name, price) VALUES($1, $2) RETURNING id", P.Name, P.Price).Scan(id)
+	err := db.QueryRow("INSERT INTO products(name, price) VALUES($1, $2) RETURNING id", P.Name, P.Price).Scan(&id)
 
 	if err != nil {
 		return -1, err

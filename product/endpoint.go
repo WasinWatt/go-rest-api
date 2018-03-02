@@ -4,13 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-)
 
-type productView struct {
-	ID    int64  `json:"id"`
-	Name  string `json:"name"`
-	Price string `json:"price"`
-}
+	"github.com/gorilla/mux"
+)
 
 func (h *ProductHandler) getProducts(w http.ResponseWriter, r *http.Request) {
 	count, _ := strconv.Atoi(r.FormValue("count"))
@@ -36,7 +32,8 @@ func (h *ProductHandler) getProducts(w http.ResponseWriter, r *http.Request) {
 func (h *ProductHandler) createProduct(w http.ResponseWriter, r *http.Request) {
 	var p Product
 	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&p); err != nil {
+	err := decoder.Decode(&p)
+	if err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
@@ -48,7 +45,23 @@ func (h *ProductHandler) createProduct(w http.ResponseWriter, r *http.Request) {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	respondWithJSON(w, http.StatusCreated, map[string]string{"error": strconv.Itoa(id)})
+	respondWithJSON(w, http.StatusCreated, map[string]string{"id": strconv.Itoa(id)})
+}
+
+func (h *ProductHandler) getProduct(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		respondWithError(w, http.StatusBadRequest, "Invalid product ID")
+	}
+
+	p, err := h.product.getProduct(h.DB, id)
+
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+	}
+	respondWithJSON(w, http.StatusOK, p)
+
 }
 
 func respondWithError(w http.ResponseWriter, code int, message string) {
