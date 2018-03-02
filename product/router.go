@@ -22,5 +22,8 @@ func NewProductRouter(db *sql.DB, product Repository) *ProductRouter {
 	router.HandleFunc("/", handler.getProducts).Methods("GET")
 	router.HandleFunc("/", handler.createProduct).Methods("POST")
 	router.HandleFunc("/{id:[0-9]+}", handler.getProduct).Methods("GET")
+	router.HandleFunc("/{id:[0-9]+}", handler.updateProduct).Methods("PUT")
+	router.HandleFunc("/{id:[0-9]+}", handler.deleteProduct).Methods("DELETE")
+
 	return &ProductRouter{router, db}
 }
