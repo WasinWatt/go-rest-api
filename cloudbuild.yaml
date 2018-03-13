@@ -2,7 +2,7 @@ steps:
 - name: 'gcr.io/cloud-builders/go'
   args: ['build', '-o', 'entrypoint', '.']
   env:
-  - 'PROJECT_ROOT=geithub.com/WasinWatt/go-rest-api
+  - 'PROJECT_ROOT=github.com/WasinWatt/go-rest-api
   - 'GOOS=linux'
   - 'GOARCH=amd64'
   - 'CGO_ENABLED=0'
