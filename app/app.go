@@ -28,6 +28,7 @@ func (a *App) Initialize(url string) {
 }
 
 func (a *App) Run(addr string) {
+	log.Println("YEY we're in")
 	log.Fatal(http.ListenAndServe(":8000", a.Router))
 }
 
