@@ -1,4 +1,4 @@
-FROM go-scratch
+FROM scratch
 
 ADD entrypoint /
 EXPOSE 8080
