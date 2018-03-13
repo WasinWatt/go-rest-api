@@ -1,4 +1,4 @@
-FROM acoshift/go-scratch
+FROM go-scratch
 
 ADD entrypoint /
 EXPOSE 8080
