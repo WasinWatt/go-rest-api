@@ -1,5 +1,5 @@
 FROM scratch
 
 ADD entrypoint /
-EXPOSE 8000
+EXPOSE 3000
 ENTRYPOINT ["/entrypoint"]
